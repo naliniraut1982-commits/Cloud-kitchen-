@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neelak-SHEERA — Weekend Sheera Kitchen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF3E6;
+    --parchment:#F1E2C9;
+    --ink:#4A3226;
+    --plum:#5C3A54;
+    --gold:#C99A3E;
+    --rose:#B4707A;
+    --sage:#7C9473;
+    --line: rgba(74,50,38,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Karla',sans-serif;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:'Rozha One',serif;font-weight:400;letter-spacing:0.5px;color:var(--plum);}
+  .mono{font-family:'Space Mono',monospace;}
+  a{color:inherit;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+
+  /* Ambient breathing glow, calm ambient motion behind the hero */
+  .ambient{
+    position:absolute;border-radius:50%;
+    filter:blur(60px);pointer-events:none;z-index:0;
+    animation:breathe 9s ease-in-out infinite;
+  }
+  .ambient.a1{width:340px;height:340px;top:-80px;left:8%;background:radial-gradient(circle, rgba(201,154,62,0.28), transparent 70%);}
+  .ambient.a2{width:300px;height:300px;top:20px;right:6%;background:radial-gradient(circle, rgba(180,112,122,0.24), transparent 70%);animation-delay:2.5s;}
+  @keyframes breathe{
+    0%,100%{transform:scale(1);opacity:0.7;}
+    50%{transform:scale(1.15);opacity:1;}
+  }
+
+  /* Floating cardamom pods, ambient decoration */
+  .pod{
+    position:absolute;width:10px;height:16px;border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    background:var(--sage);opacity:0.35;pointer-events:none;
+    animation:drift 7s ease-in-out infinite;
+  }
+  .pod.p1{top:18%;left:12%;animation-delay:0s;}
+  .pod.p2{top:65%;left:88%;animation-delay:1.8s;background:var(--gold);}
+  .pod.p3{top:78%;left:20%;animation-delay:3.4s;}
+  @keyframes drift{
+    0%,100%{transform:translateY(0) rotate(0deg);}
+    50%{transform:translateY(-16px) rotate(12deg);}
+  }
+
+  /* Scroll reveal */
+  .reveal{
+    opacity:0;transform:translateY(18px);
+    transition:opacity .7s ease, transform .7s ease;
+  }
+  .reveal.is-visible{opacity:1;transform:translateY(0);}
+
+  #schedule, #flavors, #order{
+    scroll-margin-top: 84px;
+  }
+
+  header{
+    position:sticky;top:0;
+    background:linear-gradient(var(--cream), rgba(251,243,230,0.94));
+    border-bottom:1px solid var(--line);
+    z-index:50;
+  }
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 24px;max-width:1080px;margin:0 auto;
+  }
+  .brand{font-family:'Rozha One',serif;font-size:1.3rem;color:var(--plum);}
+  .brand span{color:var(--rose);}
+  .navlinks{display:flex;gap:28px;font-size:0.9rem;}
+  .navlinks a{text-decoration:none;opacity:0.85;transition:opacity .2s, color .2s;color:var(--ink);}
+  .navlinks a:hover{opacity:1;color:var(--rose);}
+
+  /* HERO */
+  .hero{
+    position:relative;
+    padding:90px 24px 70px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .bowl-wrap{
+    position:relative;
+    width:180px;height:110px;margin:0 auto 18px;
+  }
+  .steam{
+    position:absolute;bottom:70px;
+    width:6px;height:60px;border-radius:6px;
+    background:linear-gradient(to top, rgba(92,58,84,0.28), rgba(92,58,84,0));
+    filter:blur(2px);
+    animation:rise 3.4s ease-in-out infinite;
+  }
+  .steam:nth-child(1){left:52px;animation-delay:0s;}
+  .steam:nth-child(2){left:88px;animation-delay:1.1s;height:75px;}
+  .steam:nth-child(3){left:124px;animation-delay:2.1s;}
+  @keyframes rise{
+    0%{transform:translateY(0) scaleX(1);opacity:0;}
+    20%{opacity:0.8;}
+    100%{transform:translateY(-70px) scaleX(1.6);opacity:0;}
+  }
+  .bowl{
+    position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+    width:150px;height:70px;
+    background:linear-gradient(180deg, var(--gold), #A97D2C);
+    border-radius:0 0 70px 70px / 0 0 60px 60px;
+    box-shadow:inset 0 -8px 14px rgba(74,50,38,0.25);
+  }
+  .bowl::before{
+    content:"";
+    position:absolute;top:-10px;left:-8px;right:-8px;
+    height:20px;border-radius:50%;
+    background:radial-gradient(ellipse at center, #EBCB86 0%, var(--gold) 70%);
+    box-shadow:0 2px 0 rgba(74,50,38,0.12);
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 7vw, 4.6rem);
+    color:var(--plum);
+    line-height:1.05;
+  }
+  .hero h1 .accent{color:var(--rose);}
+  .hero p.tag{
+    max-width:520px;margin:18px auto 0;
+    font-size:1.08rem;opacity:0.85;color:var(--ink);
+  }
+  .hero .cta-row{
+    margin-top:34px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-block;padding:14px 28px;
+    border-radius:3px;text-decoration:none;font-weight:700;
+    font-size:0.95rem;letter-spacing:0.3px;
+    transition:transform .15s ease, box-shadow .15s ease;
+    border:1px solid transparent;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--rose);color:var(--cream);box-shadow:0 6px 18px rgba(180,112,122,0.32);}
+  .btn-ghost{border-color:var(--line);color:var(--ink);}
+
+  /* STOVE DIAL — signature element */
+  section.schedule{padding:60px 24px 80px;position:relative;z-index:2;}
+  .schedule .eyebrow{
+    font-family:'Space Mono',monospace;font-size:0.78rem;
+    letter-spacing:2px;text-transform:uppercase;color:var(--rose);
+    text-align:center;display:block;margin-bottom:10px;
+  }
+  .schedule h2{text-align:center;font-size:2rem;margin-bottom:10px;}
+  .schedule .sub{text-align:center;opacity:0.75;max-width:480px;margin:0 auto 46px;}
+  .dials{
+    display:flex;justify-content:center;gap:18px;flex-wrap:wrap;
+  }
+  .dial{
+    width:84px;text-align:center;
+  }
+  .knob{
+    width:70px;height:70px;border-radius:50%;
+    margin:0 auto 10px;position:relative;
+    display:flex;align-items:center;justify-content:center;
+    border:2px solid var(--line);
+    background:radial-gradient(circle at 35% 30%, var(--parchment), #E7D3AE 75%);
+  }
+  .dial.off .knob::after{
+    content:"";width:26px;height:3px;background:rgba(74,50,38,0.25);border-radius:2px;
+  }
+  .dial.on .knob{
+    border-color:var(--gold);
+    box-shadow:0 0 0 4px rgba(201,154,62,0.15), 0 0 22px rgba(180,112,122,0.3);
+  }
+  .flame-icon{
+    width:16px;height:20px;
+    background:radial-gradient(circle at 50% 70%, var(--rose) 0%, var(--gold) 55%, transparent 75%);
+    clip-path: polygon(50% 0%, 80% 40%, 65% 40%, 85% 75%, 50% 100%, 15% 75%, 35% 40%, 20% 40%);
+    animation:flicker 1.8s ease-in-out infinite;
+  }
+  @keyframes flicker{
+    0%,100%{transform:scale(1) translateY(0);}
+    50%{transform:scale(1.08) translateY(-1px);}
+  }
+  .dial .day{font-size:0.85rem;font-weight:700;}
+  .dial .state{
+    font-family:'Space Mono',monospace;font-size:0.65rem;
+    letter-spacing:1px;opacity:0.6;display:block;margin-top:2px;
+  }
+  .dial.on .state{opacity:1;color:var(--rose);}
+
+  /* PHILOSOPHY */
+  .philosophy{
+    padding:70px 24px;
+    background:var(--parchment);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .philosophy .grid{
+    display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:center;
+  }
+  .philosophy h2{font-size:1.9rem;margin-bottom:16px;}
+  .philosophy p{opacity:0.85;line-height:1.75;margin-bottom:14px;color:var(--ink);}
+  .philosophy .stat-col{
+    display:grid;gap:22px;
+  }
+  .stat{
+    border-left:2px solid var(--rose);padding-left:16px;
+  }
+  .stat .num{font-family:'Rozha One',serif;font-size:2rem;color:var(--gold);}
+  .stat .label{font-size:0.85rem;opacity:0.7;color:var(--ink);}
+
+  /* FLAVORS */
+  .flavors{padding:80px 24px;}
+  .flavors .eyebrow{
+    font-family:'Space Mono',monospace;font-size:0.78rem;letter-spacing:2px;
+    text-transform:uppercase;color:var(--rose);text-align:center;display:block;margin-bottom:10px;
+  }
+  .flavors h2{text-align:center;font-size:2rem;margin-bottom:46px;}
+  .flavor-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px;
+  }
+  .flavor-card{
+    background:linear-gradient(160deg, rgba(92,58,84,0.05), rgba(92,58,84,0.02));
+    border:1px solid var(--line);border-radius:6px;padding:26px;
+    transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+  .flavor-card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 10px 24px rgba(74,50,38,0.1);}
+  .flavor-card .tag{
+    font-family:'Space Mono',monospace;font-size:0.68rem;letter-spacing:1px;
+    color:var(--sage);text-transform:uppercase;
+  }
+  .flavor-card h3{font-size:1.35rem;margin:8px 0 10px;color:var(--plum);}
+  .flavor-card p{font-size:0.9rem;opacity:0.8;line-height:1.6;margin-bottom:16px;color:var(--ink);}
+  .flavor-card .price{
+    display:flex;justify-content:space-between;align-items:center;
+    border-top:1px dashed var(--line);padding-top:14px;
+    font-family:'Space Mono',monospace;font-size:0.85rem;color:var(--ink);
+  }
+
+  /* ORDER */
+  .order{
+    padding:80px 24px;background:var(--parchment);
+    border-top:1px solid var(--line);
+  }
+  .order .inner{max-width:640px;margin:0 auto;}
+  .order .eyebrow{
+    font-family:'Space Mono',monospace;font-size:0.78rem;letter-spacing:2px;
+    text-transform:uppercase;color:var(--rose);display:block;margin-bottom:10px;text-align:center;
+  }
+  .order h2{text-align:center;font-size:2rem;margin-bottom:8px;}
+  .order .sub{text-align:center;opacity:0.75;margin-bottom:40px;color:var(--ink);}
+  form{
+    display:grid;gap:16px;
+    background:var(--cream);
+    border:1px solid var(--line);border-radius:8px;padding:28px;
+  }
+  .field{display:grid;gap:6px;}
+  label{font-size:0.8rem;letter-spacing:0.4px;opacity:0.8;color:var(--ink);}
+  input,select,textarea{
+    background:var(--parchment);border:1px solid var(--line);border-radius:4px;
+    padding:11px 12px;color:var(--ink);font-family:'Karla',sans-serif;font-size:0.95rem;
+  }
+  input:focus,select:focus,textarea:focus{
+    outline:2px solid var(--gold);outline-offset:1px;border-color:transparent;
+  }
+  textarea{resize:vertical;min-height:70px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .submit-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
+  .helper{font-size:0.78rem;opacity:0.6;text-align:center;margin-top:14px;color:var(--ink);}
+  .closed-note{
+    display:none;margin-top:14px;padding:12px 14px;border-radius:4px;
+    background:rgba(180,112,122,0.14);border:1px solid var(--rose);
+    font-size:0.85rem;color:var(--ink);
+  }
+
+  footer{
+    padding:40px 24px;text-align:center;
+    border-top:1px solid var(--line);
+    font-size:0.85rem;opacity:0.75;color:var(--ink);
+  }
+  footer .fbrand{font-family:'Rozha One',serif;color:var(--plum);font-size:1.05rem;display:block;margin-bottom:8px;}
+
+  @media(max-width:720px){
+    .philosophy .grid{grid-template-columns:1fr;gap:34px;}
+    .row2{grid-template-columns:1fr;}
+    .navlinks{display:none;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .steam, .flame-icon, .ambient, .pod{animation:none;}
+    .reveal{opacity:1;transform:none;transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="brand">Neelak<span>-SHEERA</span></div>
+    <nav class="navlinks">
+      <a href="#schedule">When we cook</a>
+      <a href="#flavors">Flavors</a>
+      <a href="#order">Order</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="ambient a1"></div>
+  <div class="ambient a2"></div>
+  <div class="pod p1"></div>
+  <div class="pod p2"></div>
+  <div class="pod p3"></div>
+  <div class="bowl-wrap">
+    <div class="steam"></div>
+    <div class="steam"></div>
+    <div class="steam"></div>
+    <div class="bowl"></div>
+  </div>
+  <h1>A kitchen that only<br><span class="accent">simmers on weekends.</span></h1>
+  <p class="tag">Neelak-SHEERA makes one thing, in small batches, fresh off the stove — hot, ghee-rich sheera, cooked only on Saturdays and Sundays and delivered the same day.</p>
+  <div class="cta-row">
+    <a href="#order" class="btn btn-primary">Order for this weekend</a>
+    <a href="#flavors" class="btn btn-ghost">See the flavors</a>
+  </div>
+</section>
+
+<section class="schedule" id="schedule">
+  <span class="eyebrow">Weekly Stove</span>
+  <h2>Two days on. Five days off.</h2>
+  <p class="sub">The stove stays cold Monday through Friday — no reheated batches, no leftover stock. What you order is what just came off the flame.</p>
+  <div class="dials">
+    <div class="dial off"><div class="knob"></div><div class="day">Mon</div><span class="state">off</span></div>
+    <div class="dial off"><div class="knob"></div><div class="day">Tue</div><span class="state">off</span></div>
+    <div class="dial off"><div class="knob"></div><div class="day">Wed</div><span class="state">off</span></div>
+    <div class="dial off"><div class="knob"></div><div class="day">Thu</div><span class="state">off</span></div>
+    <div class="dial off"><div class="knob"></div><div class="day">Fri</div><span class="state">off</span></div>
+    <div class="dial on"><div class="knob"><div class="flame-icon"></div></div><div class="day">Sat</div><span class="state">cooking</span></div>
+    <div class="dial on"><div class="knob"><div class="flame-icon"></div></div><div class="day">Sun</div><span class="state">cooking</span></div>
+  </div>
+</section>
+
+<section class="philosophy">
+  <div class="wrap grid">
+    <div>
+      <h2>Why we don't cook every day</h2>
+      <p>Sheera is at its best in the first hour off the stove — ghee still glossy, sooji or besan still holding heat, cardamom still sharp. Cooking daily means holding batches, and holding batches means it's never quite fresh.</p>
+      <p>So we picked two days, cook everything to order, and deliver within hours of the last stir. The rest of the week, the stove is off and we're prepping for the next batch.</p>
+    </div>
+    <div class="stat-col">
+      <div class="stat"><div class="num">2</div><div class="label">cooking days a week — Saturday & Sunday only</div></div>
+      <div class="stat"><div class="num">0</div><div class="label">frozen or reheated batches, ever</div></div>
+      <div class="stat"><div class="num">1</div><div class="label">dish, made well, instead of a long menu</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="flavors" id="flavors">
+  <span class="eyebrow">This Weekend's Batch</span>
+  <h2>Sixteen sheeras, one stove</h2>
+  <div class="flavor-grid">
+    <div class="flavor-card">
+      <span class="tag">Classic</span>
+      <h3>Suji Sheera</h3>
+      <p>Roasted semolina, ghee, cardamom, and cashew — the one everyone grew up on.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹150</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Classic</span>
+      <h3>Kesari Rava Sheera</h3>
+      <p>Saffron-hued semolina in the South Indian style, with raisins and cashew.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹160</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Classic</span>
+      <h3>Besan Sheera</h3>
+      <p>Slow-roasted gram flour finished with saffron and a touch of nutmeg.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹180</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Classic</span>
+      <h3>Moong Dal Sheera</h3>
+      <p>Split moong lentil, khoya, and pistachio, simmered low and slow.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹200</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Classic</span>
+      <h3>Aata Sheera</h3>
+      <p>Whole wheat with jaggery and dry fruits — earthy, warm, less sweet.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹160</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Fruit</span>
+      <h3>Kelyacha Sheera</h3>
+      <p>Ripe banana folded into semolina with ghee and a whisper of nutmeg.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹170</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Fruit</span>
+      <h3>Ananas Sheera</h3>
+      <p>Pineapple-cooked semolina, sweet-tart and finished with cardamom.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹180</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Fruit</span>
+      <h3>Nariyal Sheera</h3>
+      <p>Fresh grated coconut cooked into semolina with ghee and cardamom.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹170</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Vegetable</span>
+      <h3>Doodhi Sheera</h3>
+      <p>Grated bottle gourd cooked down with semolina, ghee, and cardamom.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹170</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Vegetable</span>
+      <h3>Kaddu Sheera</h3>
+      <p>Pumpkin simmered soft into semolina, lightly spiced with cardamom.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹170</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Vegetable</span>
+      <h3>Gajar Halwa</h3>
+      <p>Slow-cooked grated carrot in ghee and khoya — the classic winter halwa.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹190</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Nut</span>
+      <h3>Badam Sheera</h3>
+      <p>Ground almond cooked in ghee with saffron — rich and quick to finish.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹220</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Fasting / Vrat</span>
+      <h3>Sabudana Sheera</h3>
+      <p>Sago pearls simmered with ghee, peanut, and cardamom — vrat-friendly.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹190</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Fasting / Vrat</span>
+      <h3>Singhare ka Halwa</h3>
+      <p>Water chestnut flour cooked slow in ghee — a vrat classic, dense and rich.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹200</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">Fasting / Vrat</span>
+      <h3>Kuttu ka Halwa</h3>
+      <p>Buckwheat flour halwa with ghee and dry fruit, another vrat staple.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹190</span></div>
+    </div>
+    <div class="flavor-card">
+      <span class="tag">No Sugar</span>
+      <h3>Jaggery Sheera</h3>
+      <p>Classic semolina sheera sweetened only with jaggery — no refined sugar at all.</p>
+      <div class="price"><span>Bowl · 250g</span><span>₹170</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="order" id="order">
+  <div class="inner">
+    <span class="eyebrow">Place An Order</span>
+    <h2>Order for the next cooking day</h2>
+    <p class="sub">Fill this in and it opens a pre-filled WhatsApp message to us — nothing gets typed twice.</p>
+
+    <form id="orderForm">
+      <div class="field">
+        <label for="name">Your name</label>
+        <input type="text" id="name" required placeholder="Neelakshi Raut">
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label for="flavor">Flavor</label>
+          <select id="flavor">
+            <option>Suji Sheera (Classic) — ₹150</option>
+            <option>Kesari Rava Sheera (Classic) — ₹160</option>
+            <option>Besan Sheera (Classic) — ₹180</option>
+            <option>Moong Dal Sheera (Classic) — ₹200</option>
+            <option>Aata Sheera (Classic) — ₹160</option>
+            <option>Kelyacha Sheera (Banana) — ₹170</option>
+            <option>Ananas Sheera (Pineapple) — ₹180</option>
+            <option>Nariyal Sheera (Coconut) — ₹170</option>
+            <option>Doodhi Sheera (Bottle Gourd) — ₹170</option>
+            <option>Kaddu Sheera (Pumpkin) — ₹170</option>
+            <option>Gajar Halwa (Carrot) — ₹190</option>
+            <option>Badam Sheera (Almond) — ₹220</option>
+            <option>Sabudana Sheera (Fasting) — ₹190</option>
+            <option>Singhare ka Halwa (Fasting) — ₹200</option>
+            <option>Kuttu ka Halwa (Fasting) — ₹190</option>
+            <option>Jaggery Sheera (No Sugar) — ₹170</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="qty">Bowls (250g each)</label>
+          <input type="number" id="qty" min="1" value="1" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="day">Delivery day</label>
+        <select id="day"></select>
+      </div>
+
+      <div class="field">
+        <label for="address">Delivery address</label>
+        <textarea id="address" required placeholder="Flat / street / landmark / city"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="phone">Your phone number</label>
+        <input type="tel" id="phone" required placeholder="98xxxxxxx0">
+      </div>
+
+      <div class="submit-row">
+        <button type="submit" class="btn btn-primary" style="border:none;cursor:pointer;">Send order on WhatsApp</button>
+      </div>
+      <p class="helper">Orders close Friday 8 PM for Saturday delivery, and Saturday 8 PM for Sunday delivery.</p>
+      <div class="closed-note" id="closedNote">Sheera's off the stove right now. We only cook Saturday and Sunday — pick one of those days above and we'll get it to you fresh.</div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <span class="fbrand">Neelak-SHEERA</span>
+  Weekend-only cloud kitchen &middot; WhatsApp <span class="mono">+91 98765 43210</span> &middot; Delivering Saturdays &amp; Sundays only
+</footer>
+
+<script>
+  // Populate the delivery-day select with the next upcoming Saturday and Sunday
+  function nextWeekendDates(){
+    const today = new Date();
+    const options = [];
+    for(let i=0;i<8;i++){
+      const d = new Date(today);
+      d.setDate(today.getDate()+i);
+      if(d.getDay()===6 || d.getDay()===0){
+        options.push(new Date(d));
+      }
+      if(options.length===2) break;
+    }
+    return options;
+  }
+
+  const daySelect = document.getElementById('day');
+  const dates = nextWeekendDates();
+  const fmt = d => d.toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long' });
+  dates.forEach(d=>{
+    const opt = document.createElement('option');
+    opt.value = fmt(d);
+    opt.textContent = fmt(d);
+    daySelect.appendChild(opt);
+  });
+
+  // Scroll-reveal: fade + rise elements into view, staggered
+  (function(){
+    const groups = [
+      document.querySelectorAll('.dial'),
+      document.querySelectorAll('.flavor-card'),
+      document.querySelectorAll('.stat'),
+    ];
+    const targets = [];
+    groups.forEach(list=>{
+      list.forEach((el, i)=>{
+        el.classList.add('reveal');
+        el.style.transitionDelay = (i * 70) + 'ms';
+        targets.push(el);
+      });
+    });
+    if('IntersectionObserver' in window){
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      targets.forEach(el=>io.observe(el));
+    } else {
+      targets.forEach(el=>el.classList.add('is-visible'));
+    }
+  })();
+
+  const WHATSAPP_NUMBER = "919876543210"; // dummy number — replace with the real one
+
+  document.getElementById('orderForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const flavor = document.getElementById('flavor').value;
+    const qty = document.getElementById('qty').value;
+    const day = document.getElementById('day').value;
+    const address = document.getElementById('address').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+
+    const message =
+`New Neelak-SHEERA order
+Name: ${name}
+Flavor: ${flavor}
+Quantity: ${qty} bowl(s)
+Delivery day: ${day}
+Address: ${address}
+Phone: ${phone}`;
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  });
+</script>
+
+</body>
+</html>
